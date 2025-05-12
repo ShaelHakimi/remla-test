@@ -12,12 +12,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }}
+          
       - name: Parse version info from tag
         run: |
           VERSION=${GITHUB_REF:11}
           MAJOR=$(echo "$VERSION" | cut -d . -f 1)
           MINOR=$(echo "$VERSION" | cut -d . -f 2)
           PATCH=$(echo "$VERSION" | cut -d . -f 3)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION_MAJOR=$MAJOR" >> $GITHUB_ENV
+          echo "VERSION_MINOR=$MINOR" >> $GITHUB_ENV
+          echo "VERSION_PATCH=$PATCH" >> $GITHUB_ENV
+      - name: Build and push Docker image
       - run: |
           IMG="ghcr.io/${{github.repository}}"
           MG=${IMG@L} # lower case the image
