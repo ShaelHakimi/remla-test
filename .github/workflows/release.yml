@@ -19,18 +19,19 @@ jobs:
           MAJOR=$(echo "$VERSION" | cut -d . -f 1)
           MINOR=$(echo "$VERSION" | cut -d . -f 2)
           PATCH=$(echo "$VERSION" | cut -d . -f 3)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "VERSION_MAJOR=$MAJOR" >> $GITHUB_ENV
-          echo "VERSION_MINOR=$MINOR" >> $GITHUB_ENV
-          echo "VERSION_PATCH=$PATCH" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_ENV
+          echo "version_major=$MAJOR" >> $GITHUB_ENV
+          echo "version_minor=$MINOR" >> $GITHUB_ENV
+          echo "version_patch=$PATCH" >> $GITHUB_ENV
+          
       - name: Build and push Docker image
-      - run: |
+        run: |
           IMG="ghcr.io/${{github.repository}}"
           MG=${IMG@L} # lower case the image
           docker build \
-            --tag $IMG:${{ env.version }} \
-            --tag $IMG:${{ env.version_major }}.${{ env.version_minor }}.latest \
-            --tag $IMG:${{ env.version_major }}.latest \
-            --tag $IMG:latest \
+            --tag $IMG_LC:${{ env.VERSION }} \
+            --tag $IMG_LC:${{ env.VERSION_MAJOR }}.${{ env.VERSION_MINOR }}.latest \
+            --tag $IMG_LC:${{ env.VERSION_MAJOR }}.latest \
+            --tag $IMG_LC:latest \
             .
           docker push --all-tags $IMG
